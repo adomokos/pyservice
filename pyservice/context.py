@@ -7,10 +7,10 @@ class Context(dict):
     def __init__(self, *arg, **kw):
         self.__success = True
 
-    def get_failure(self: 'Context') -> bool:
+    def is_failure(self: 'Context') -> bool:
         return self.__success is False
 
-    def get_success(self: 'Context') -> bool:
+    def is_success(self: 'Context') -> bool:
         return self.__success
 
     def fail(self: 'Context') -> None:
