@@ -6,9 +6,6 @@ from pyservice.action import action
 
 @action()
 def addTwo(ctx: Context) -> Context:
-    if ctx.is_failure():
-        return ctx
-
     n = ctx['n']
     ctx['result'] = n + 2
     return ctx
