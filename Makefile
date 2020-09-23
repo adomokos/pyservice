@@ -6,6 +6,10 @@ run: ## Run the app
 	poetry run my-script
 .PHONY: run
 
+lint: ## Lint the code
+	poetry run flake8 pyservice spec
+	poetry run mypy pyservice spec
+
 test: ## Run the tests
 	poetry run pytest -s
 .PHONY: test

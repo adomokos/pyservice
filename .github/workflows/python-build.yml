@@ -28,6 +28,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
+    - name: Run linters (flake8 and mypy)
+      run: |
+        make lint
     - name: Run specs
       run: |
         make spec
