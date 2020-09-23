@@ -1,6 +1,7 @@
 from mamba import before, context, description, it  # type: ignore
 from pyservice.context import Context
 from pyservice.action import action, Action
+from pyservice.organizer import Organizer
 from typing import Callable, List
 
 
@@ -46,6 +47,12 @@ def organizer2(ctx: Context) -> Context:
     return ctx
 
 
+class AnOrganizer(Organizer):
+    def __init__(self, ctx, actions):
+        self.ctx = ctx
+        self.actions = actions
+
+
 with description('Organizer') as self:
     with before.each:
         self.ctx = Context.make()
@@ -61,6 +68,9 @@ with description('Organizer') as self:
     with context('using Action objects'):
 
         with it('can call two actions'):
-            organizer2(self.ctx)
+            self.ctx['result'] = 2
+            org2 = AnOrganizer(self.ctx, [AddTwo(), AddThree()])
+
+            org2.run()
 
             assert self.ctx['result'] == 7
