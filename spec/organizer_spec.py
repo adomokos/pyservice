@@ -3,7 +3,7 @@ from pyservice.context import Context
 from pyservice.action import action
 from pyservice.organizer import Organizer
 from typing import Callable, List
-from .test_doubles import AddTwo, AddThree
+from .test_doubles import AddTwo, AddThree, Fail
 
 
 @action()
@@ -57,3 +57,15 @@ with description('Organizer') as self:
             o2.run()
 
             assert self.ctx['result'] == 7
+
+        with it('will stop executing after failed action'):
+            self.ctx['result'] = 2
+            o3 = Organizer(self.ctx,
+                           [AddTwo(),
+                            Fail(),
+                            AddThree()])
+
+            result3: Context = o3.run()
+
+            assert result3.is_failure()
+            assert result3['result'] == 4
