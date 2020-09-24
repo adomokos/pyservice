@@ -1,8 +1,9 @@
 from mamba import before, context, description, it  # type: ignore
 from pyservice.context import Context
-from pyservice.action import action, Action
+from pyservice.action import action
 from pyservice.organizer import Organizer
 from typing import Callable, List
+from .test_doubles import AddTwo, AddThree
 
 
 @action()
@@ -16,18 +17,6 @@ def addTwo(ctx: Context) -> Context:
 def addThree(ctx: Context) -> Context:
     ctx['result'] += 3
     return ctx
-
-
-class AddTwo(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx['result'] += 2
-        return ctx
-
-
-class AddThree(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx['result'] += 3
-        return ctx
 
 
 def organizer(ctx: Context) -> Context:
@@ -47,12 +36,6 @@ def organizer2(ctx: Context) -> Context:
     return ctx
 
 
-class AnOrganizer(Organizer):
-    def __init__(self, ctx, actions):
-        self.ctx = ctx
-        self.actions = actions
-
-
 with description('Organizer') as self:
     with before.each:
         self.ctx = Context.make()
@@ -69,8 +52,8 @@ with description('Organizer') as self:
 
         with it('can call two actions'):
             self.ctx['result'] = 2
-            org2 = AnOrganizer(self.ctx, [AddTwo(), AddThree()])
+            o2 = Organizer(self.ctx, [AddTwo(), AddThree()])
 
-            org2.run()
+            o2.run()
 
             assert self.ctx['result'] == 7
