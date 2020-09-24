@@ -25,12 +25,12 @@ class Organizer():
             actions_to_roll_back = \
                 self._find_actions_to_roll_back(e.action, actions)
 
-            return functools.reduce(
+            result = functools.reduce(
                 self._execute_rollback,
                 actions_to_roll_back,
                 ctx)
 
-            return ctx
+            return ctx if result is None else result
 
     def _execute_action(self, ctx, action):
         result = action.execute(ctx)
