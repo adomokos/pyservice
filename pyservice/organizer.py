@@ -1,7 +1,14 @@
 import functools
+from pyservice.action import Action
+from itertools import takewhile
+from typing import List
 
 
 class Organizer():
+
+    class ContextFailed(Exception):
+        def __init__(self, action: Action):
+            self.action = action
 
     def __init__(self, ctx, actions):
         self.ctx = ctx
@@ -11,8 +18,37 @@ class Organizer():
         return self._reduce(self.ctx, self.actions)
 
     def _reduce(self, ctx, actions):
-        return functools.reduce(self._execute_action, actions, ctx)
+        try:
+            return functools.reduce(self._execute_action, actions, ctx)
+        except Organizer.ContextFailed as e:
+            # roll back the actions in reverse order
+            actions_to_roll_back = \
+                self._find_actions_to_roll_back(e.action, actions)
+
+            return functools.reduce(
+                self._execute_rollback,
+                actions_to_roll_back,
+                ctx)
+
+            return ctx
 
     def _execute_action(self, ctx, action):
-        action.execute(ctx)
-        return ctx
+        result = action.execute(ctx)
+
+        if result.is_failure():
+            raise Organizer.ContextFailed(action)
+
+        return result
+
+    def _execute_rollback(self, ctx, action):
+        return action.rollback(ctx)
+
+    def _find_actions_to_roll_back(
+            self,
+            action: Action,
+            actions: List[Action]) -> List[Action]:
+
+        actions_to_roll_back = [*takewhile(
+            lambda a, x=action: a != x, actions)]  # type: ignore
+        actions_to_roll_back.reverse()
+        return actions_to_roll_back

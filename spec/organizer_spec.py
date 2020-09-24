@@ -1,9 +1,9 @@
-from mamba import before, context, description, it  # type: ignore
+from mamba import before, context, description, fit, it  # type: ignore
 from pyservice.context import Context
 from pyservice.action import action
 from pyservice.organizer import Organizer
 from typing import Callable, List
-from .test_doubles import AddTwo, AddThree, Fail
+from .test_doubles import AddTwo, AddTwoWithRollback, AddThree, Fail
 
 
 @action()
@@ -69,3 +69,14 @@ with description('Organizer') as self:
 
             assert result3.is_failure()
             assert result3['result'] == 4
+
+        with fit('rolls back with available rollbacks'):
+            self.ctx['result'] = 2
+            o4 = Organizer(self.ctx,
+                           [AddTwoWithRollback(),
+                            Fail(),
+                            AddThree()])
+
+            result4: Context = o4.run()
+            assert result4.is_failure()
+            assert result4['result'] == 2

@@ -19,14 +19,16 @@ def action():
 
 def verify_context(func):
     '''
-        Guards the exeuction of the action, if the provided context
-        is in a failure state execution is stopped
+        Guards the execution of the action, if the provided context
+        is in a failure state, execution is stopped
     '''
     def wrapper(*args, **kwargs):
         (cls, ctx) = args
 
         if (ctx.is_success()):
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
+
+        return ctx
 
     return wrapper
 
