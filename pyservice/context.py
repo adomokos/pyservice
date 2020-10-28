@@ -7,9 +7,11 @@ class Context(dict):
     def __init__(self, *arg, **kw):
         self.__success = True
 
+    @property
     def is_failure(self: 'Context') -> bool:
         return self.__success is False
 
+    @property
     def is_success(self: 'Context') -> bool:
         return self.__success
 

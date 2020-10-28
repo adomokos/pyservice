@@ -67,7 +67,7 @@ with description('Organizer') as self:
 
             result3: Context = o3.run()
 
-            assert result3.is_failure()
+            assert result3.is_failure
             assert result3['result'] == 4
 
         with it('rolls back with available rollbacks'):
@@ -78,5 +78,5 @@ with description('Organizer') as self:
                             AddThree()])
 
             result4: Context = o4.run()
-            assert result4.is_failure()
+            assert result4.is_failure
             assert result4['result'] == 2

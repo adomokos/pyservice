@@ -7,12 +7,12 @@ with description('Context') as self:
         self.ctx = Context.make()
 
     with it('is success by default'):
-        assert self.ctx.is_success()
-        assert self.ctx.is_failure() is False
+        assert self.ctx.is_success
+        assert self.ctx.is_failure is False
 
     with it('can be pushed into a failure state'):
         self.ctx.fail()
-        assert self.ctx.is_failure()
+        assert self.ctx.is_failure
 
     with it('is a dictionary'):
         self.ctx['one'] = 1

@@ -35,7 +35,7 @@ class Organizer():
     def _execute_action(self, ctx, action):
         result = action.execute(ctx)
 
-        if result.is_failure():
+        if result.is_failure:
             raise Organizer.ContextFailed(action)
 
         return result
