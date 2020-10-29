@@ -11,8 +11,12 @@ lint: ## Lint the code
 	poetry run mypy pyservice spec
 
 spec: ## Run the specs
-	poetry run mamba spec --format=documentation
+	poetry run mamba spec --format=documentation --enable-coverage
 .PHONY: spec
+
+coverage: ## Run the coverage report
+	poetry run coverage report --fail-under=95
+.PHONY: coverage
 
 repl: ## Fire up the Repl
 	poetry run python
