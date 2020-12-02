@@ -1,5 +1,5 @@
 from mamba import before, description, it  # type: ignore
-from pyservice.context import Context
+from pyservice import Context
 
 
 with description('Context') as self:

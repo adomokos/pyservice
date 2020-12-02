@@ -1,7 +1,7 @@
 from mamba import before, context, description, it  # type: ignore
 from expects import expect, raise_error  # type: ignore
-from pyservice.context import Context
-from pyservice.action import action, Action  # , Action
+from pyservice import Context
+from pyservice import action, Action  # , Action
 
 
 @action()

@@ -1,7 +1,7 @@
 from mamba import before, context, description, it  # type: ignore
-from pyservice.context import Context
-from pyservice.action import action
-from pyservice.organizer import Organizer, Organizer2
+from pyservice import Context
+from pyservice import action
+from pyservice import Organizer, Organizer2
 from typing import Callable, List
 from .test_doubles import AddTwo, AddTwoWithRollback, AddThree, Fail
 

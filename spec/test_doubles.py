@@ -1,5 +1,5 @@
-from pyservice.action import Action
-from pyservice.context import Context
+from pyservice import Action
+from pyservice import Context
 
 
 class AddTwo(Action):
