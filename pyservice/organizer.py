@@ -1,16 +1,16 @@
 import functools
 from pyservice.action import Action
-#  from pyservice.context import Context
+from pyservice.context import Context
 from itertools import takewhile
-from typing import List
+from typing import Callable, List
 
 
 class Organizer2():
 
-    def __init__(self, actions):
+    def __init__(self, actions: List[Callable]):
         self.actions = actions
 
-    def run(self, ctx):
+    def run(self, ctx: Context) -> Context:
         return functools.reduce(
                 lambda _ctx, f: f(_ctx),
                 self.actions,
