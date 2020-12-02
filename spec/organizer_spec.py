@@ -1,26 +1,32 @@
 from mamba import before, context, description, it  # type: ignore
 from pyservice.context import Context
 from pyservice.action import action
-from pyservice.organizer import Organizer
+from pyservice.organizer import Organizer, Organizer2
 from typing import Callable, List
 from .test_doubles import AddTwo, AddTwoWithRollback, AddThree, Fail
 
 
 @action()
-def addTwo(ctx: Context) -> Context:
+def add_two(ctx: Context) -> Context:
     n = ctx['n']
     ctx['result'] = n + 2
     return ctx
 
 
 @action()
-def addThree(ctx: Context) -> Context:
+def fail_context(ctx: Context) -> Context:
+    ctx.fail()
+    return ctx
+
+
+@action()
+def add_three(ctx: Context) -> Context:
     ctx['result'] += 3
     return ctx
 
 
 def organizer(ctx: Context) -> Context:
-    actions: List[Callable] = [addTwo, addThree]
+    actions: List[Callable] = [add_two, add_three]
     for an_action in actions:
         an_action(ctx)
 
@@ -47,6 +53,23 @@ with description('Organizer') as self:
             organizer(self.ctx)
 
             assert self.ctx['result'] == 8
+
+        with it('can run functions'):
+            self.ctx['n'] = 3
+            actions = Organizer2([add_two, add_three])
+
+            result_ctx = actions.run(self.ctx)
+
+            assert result_ctx['result'] == 8
+
+        with it('can stop with failure'):
+            self.ctx['n'] = 3
+            actions_with_failure = Organizer2([add_two, fail_context, add_three])
+
+            result_ctx = actions_with_failure.run(self.ctx)
+
+            assert result_ctx['result'] == 5
+            assert result_ctx.is_failure
 
     with context('using Action objects'):
 

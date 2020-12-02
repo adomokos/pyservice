@@ -11,6 +11,13 @@ def addTwo(ctx: Context) -> Context:
     return ctx
 
 
+@action()
+def addThree(ctx: Context) -> Context:
+    n = ctx['n']
+    ctx['result'] = n + 3
+    return ctx
+
+
 class AddTwo(Action):
 
     def execute(self, ctx):
@@ -26,7 +33,8 @@ with description('Action') as self:
     with context('wrapped action'):
         with it('can operate on a Context'):
             self.ctx['n'] = 3
-            addTwo(self.ctx)
+            an_action = addTwo
+            an_action(self.ctx)
 
             assert self.ctx['result'] == 5
 
