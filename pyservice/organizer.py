@@ -52,7 +52,7 @@ class Organizer:
     ) -> List[Action]:
 
         actions_to_roll_back = [
-            *takewhile(lambda a, x=action: a != x, actions)
-        ]  # type: ignore
+            *takewhile(lambda a, x=action: a != x, actions)  # type: ignore
+        ]
         actions_to_roll_back.reverse()
         return actions_to_roll_back
