@@ -8,18 +8,18 @@ class Context(dict):
         self.__success = True
 
     @property
-    def is_failure(self: 'Context') -> bool:
+    def is_failure(self: "Context") -> bool:
         return self.__success is False
 
     @property
-    def is_success(self: 'Context') -> bool:
+    def is_success(self: "Context") -> bool:
         return self.__success
 
-    def fail(self: 'Context') -> None:
+    def fail(self: "Context") -> None:
         self.__success = False
 
     @staticmethod
-    def make(dict_value: Dict[str, Any] = {}) -> 'Context':
+    def make(dict_value: Dict[str, Any] = {}) -> "Context":
         ctx = Context()
         ctx.update(dict_value)
         return ctx

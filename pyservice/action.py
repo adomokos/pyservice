@@ -14,18 +14,20 @@ def action():
             return f(ctx, *args, **kwargs)
 
         return decorated
+
     return action_wrapper
 
 
 def verify_context(func):
-    '''
-        Guards the execution of the action, if the provided context
-        is in a failure state, execution is stopped
-    '''
+    """
+    Guards the execution of the action, if the provided context
+    is in a failure state, execution is stopped
+    """
+
     def wrapper(*args, **kwargs):
         (cls, ctx) = args
 
-        if (ctx.is_success):
+        if ctx.is_success:
             return func(*args, **kwargs)
 
         return ctx
@@ -34,14 +36,12 @@ def verify_context(func):
 
 
 class ActionMeta(type):
-
     def __init__(cls, name, bases, attrs, **kwargs):
         super().__init__(name, bases, attrs)
         cls.execute = verify_context(cls.execute)
 
 
 class Action(metaclass=ActionMeta):
-
     @abstractmethod
     def execute(self, ctx: Context) -> Context:
         pass

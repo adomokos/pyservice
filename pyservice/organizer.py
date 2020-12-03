@@ -5,20 +5,15 @@ from itertools import takewhile
 from typing import Callable, List
 
 
-class Organizer2():
-
+class Organizer2:
     def __init__(self, actions: List[Callable]):
         self.actions = actions
 
     def run(self, ctx: Context) -> Context:
-        return functools.reduce(
-                lambda _ctx, f: f(_ctx),
-                self.actions,
-                ctx)
+        return functools.reduce(lambda _ctx, f: f(_ctx), self.actions, ctx)
 
 
-class Organizer():
-
+class Organizer:
     class ContextFailed(Exception):
         def __init__(self, action: Action):
             self.action = action
@@ -35,13 +30,9 @@ class Organizer():
             return functools.reduce(self._execute_action, actions, ctx)
         except Organizer.ContextFailed as e:
             # roll back the actions in reverse order
-            actions_to_roll_back = \
-                self._find_actions_to_roll_back(e.action, actions)
+            actions_to_roll_back = self._find_actions_to_roll_back(e.action, actions)
 
-            result = functools.reduce(
-                self._execute_rollback,
-                actions_to_roll_back,
-                ctx)
+            result = functools.reduce(self._execute_rollback, actions_to_roll_back, ctx)
 
             return ctx if result is None else result
 
@@ -57,11 +48,11 @@ class Organizer():
         return action.rollback(ctx)
 
     def _find_actions_to_roll_back(
-            self,
-            action: Action,
-            actions: List[Action]) -> List[Action]:
+        self, action: Action, actions: List[Action]
+    ) -> List[Action]:
 
-        actions_to_roll_back = [*takewhile(
-            lambda a, x=action: a != x, actions)]  # type: ignore
+        actions_to_roll_back = [
+            *takewhile(lambda a, x=action: a != x, actions)
+        ]  # type: ignore
         actions_to_roll_back.reverse()
         return actions_to_roll_back

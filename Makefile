@@ -14,6 +14,9 @@ spec: ## Run the specs
 	poetry run mamba spec --format=documentation --enable-coverage
 .PHONY: spec
 
+fmt: ## Formats the code
+	poetry run black .
+
 coverage: ## Run the coverage report
 	poetry run coverage report --fail-under=95
 .PHONY: coverage

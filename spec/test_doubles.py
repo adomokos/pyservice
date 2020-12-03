@@ -4,23 +4,23 @@ from pyservice import Context
 
 class AddTwo(Action):
     def execute(self, ctx: Context) -> Context:
-        ctx['result'] += 2
+        ctx["result"] += 2
         return ctx
 
 
 class AddTwoWithRollback(Action):
     def execute(self, ctx: Context) -> Context:
-        ctx['result'] += 2
+        ctx["result"] += 2
         return ctx
 
     def rollback(self, ctx: Context) -> Context:
-        ctx['result'] -= 2
+        ctx["result"] -= 2
         return ctx
 
 
 class AddThree(Action):
     def execute(self, ctx: Context) -> Context:
-        ctx['result'] += 3
+        ctx["result"] += 3
         return ctx
 
 
