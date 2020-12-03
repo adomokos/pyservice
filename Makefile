@@ -17,6 +17,9 @@ spec: ## Run the specs
 fmt: ## Formats the code
 	poetry run black .
 
+lint: ## Lints the code
+	poetry run black . --check
+
 coverage: ## Run the coverage report
 	poetry run coverage report --fail-under=95
 .PHONY: coverage
