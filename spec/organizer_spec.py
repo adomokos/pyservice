@@ -9,7 +9,7 @@ from .test_doubles import AddTwo, AddTwoWithRollback, AddThree, Fail
 @action()
 def add_two(ctx: Context) -> Context:
     n = ctx['n']
-    ctx['result'] = n + 2
+    ctx.update(result=n + 2)
     return ctx
 
 
