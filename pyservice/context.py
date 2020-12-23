@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 class Context(dict):
@@ -6,6 +6,7 @@ class Context(dict):
 
     def __init__(self, *arg, **kw):
         self.__success = True
+        self.__message = None
 
     @property
     def is_failure(self: "Context") -> bool:
@@ -15,7 +16,14 @@ class Context(dict):
     def is_success(self: "Context") -> bool:
         return self.__success
 
-    def fail(self: "Context") -> None:
+    @property
+    def message(self: "Context") -> Optional[str]:
+        return self.__message
+
+    def fail(self: "Context", msg: Optional[str] = None) -> None:
+        if msg is not None:
+            self.__message = msg
+
         self.__success = False
 
     @staticmethod

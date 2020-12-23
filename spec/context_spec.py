@@ -14,6 +14,11 @@ with description("Context") as self:
         self.ctx.fail()
         assert self.ctx.is_failure
 
+    with it("can fail with a message"):
+        self.ctx.fail("An error occurred")
+        assert self.ctx.is_failure
+        assert self.ctx.message == "An error occurred"
+
     with it("is a dictionary"):
         self.ctx["one"] = 1
         assert self.ctx["one"] == 1
