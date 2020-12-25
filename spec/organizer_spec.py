@@ -86,6 +86,19 @@ with description("Organizer") as self:
             assert result_ctx.is_success
             assert result_ctx["result"] == 13
 
+        with it("can fail nested organizer's action"):
+            self.ctx["n"] = 3
+
+            nestable_organizer = Organizer2([add_two, fail_context, add_three])
+            nested_organizer = Organizer2([add_two, add_three, nestable_organizer.run])
+
+            # Run function under test
+            result_ctx = nested_organizer.run(self.ctx)
+
+            assert result_ctx.is_failure
+            # Stops at the 3rd action: adds 2, 3 and 2 to initial 3 => 10
+            assert result_ctx["result"] == 10
+
     with context("using Action objects"):
 
         with it("can call two actions"):
