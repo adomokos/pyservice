@@ -9,13 +9,16 @@ from .test_doubles import AddTwo, AddTwoWithRollback, AddThree, Fail
 @action()
 def add_two(ctx: Context) -> Context:
     n = ctx["n"]
-    ctx.update(result=n + 2)
+
+    result = ctx.get("result", n)
+
+    ctx.update(result=result + 2)
     return ctx
 
 
 @action()
 def fail_context(ctx: Context) -> Context:
-    ctx.fail()
+    ctx.fail("Something went wrong...")
     return ctx
 
 
@@ -70,6 +73,18 @@ with description("Organizer") as self:
 
             assert result_ctx["result"] == 5
             assert result_ctx.is_failure
+
+        with it("can call nested organizer actions"):
+            self.ctx["n"] = 3
+
+            nestable_organizer = Organizer2([add_two, add_three])
+            nested_organizer = Organizer2([add_two, add_three, nestable_organizer.run])
+
+            # Run function under test
+            result_ctx = nested_organizer.run(self.ctx)
+
+            assert result_ctx.is_success
+            assert result_ctx["result"] == 13
 
     with context("using Action objects"):
 
