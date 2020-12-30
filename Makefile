@@ -7,13 +7,17 @@ run: ## Run the app
 .PHONY: run
 
 lint: ## Lints the code
-	poetry run flake8 pyservice spec
-	poetry run mypy pyservice spec
+	poetry run flake8 pyservice spec test
+	poetry run mypy pyservice spec test
 	poetry run black . --check
 
 spec: ## Run the specs
 	poetry run mamba spec --format=documentation --enable-coverage
 .PHONY: spec
+
+test: ## Run the tests
+	poetry run pytest
+.PHONY: test
 
 fmt: ## Formats the code
 	poetry run black .
