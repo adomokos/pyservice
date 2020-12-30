@@ -10,9 +10,17 @@ with description("Context") as self:
         assert self.ctx.is_success
         assert self.ctx.is_failure is False
 
+    with it("is not skipped by default"):
+        assert self.ctx.is_skipped is False
+
     with it("can be pushed into a failure state"):
         self.ctx.fail()
         assert self.ctx.is_failure
+
+    with it("can be pushed into a skipped state"):
+        self.ctx.skip("No need to run the rest")
+        assert self.ctx.is_skipped
+        assert self.ctx.message == "No need to run the rest"
 
     with it("can fail with a message"):
         self.ctx.fail("An error occurred")

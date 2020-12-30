@@ -6,6 +6,7 @@ class Context(dict):
 
     def __init__(self, *arg, **kw):
         self.__success = True
+        self.__skipped = False
         self.__message = None
 
     @property
@@ -17,6 +18,10 @@ class Context(dict):
         return self.__success
 
     @property
+    def is_skipped(self: "Context") -> bool:
+        return self.__skipped
+
+    @property
     def message(self: "Context") -> Optional[str]:
         return self.__message
 
@@ -25,6 +30,12 @@ class Context(dict):
             self.__message = msg
 
         self.__success = False
+
+    def skip(self: "Context", msg: Optional[str] = None) -> None:
+        if msg is not None:
+            self.__message = msg
+
+        self.__skipped = True
 
     @staticmethod
     def make(dict_value: Dict[str, Any] = {}) -> "Context":

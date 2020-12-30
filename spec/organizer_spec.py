@@ -23,6 +23,12 @@ def fail_context(ctx: Context) -> Context:
 
 
 @action()
+def skip_rest(ctx: Context) -> Context:
+    ctx.skip("No need to run the rest")
+    return ctx
+
+
+@action()
 def add_three(ctx: Context) -> Context:
     ctx["result"] += 3
     return ctx
@@ -73,6 +79,16 @@ with description("Organizer") as self:
 
             assert result_ctx["result"] == 5
             assert result_ctx.is_failure
+
+        with it("can skip the rest of the actions"):
+            self.ctx["n"] = 3
+            actions_with_skip = Organizer2([add_two, skip_rest, add_three])
+
+            result_ctx = actions_with_skip.run(self.ctx)
+
+            assert result_ctx["result"] == 5, result_ctx
+            assert result_ctx.is_success
+            assert result_ctx.is_skipped
 
         with it("can call nested organizer actions"):
             self.ctx["n"] = 3

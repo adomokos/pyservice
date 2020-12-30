@@ -8,7 +8,7 @@ def action():
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
-            if ctx.is_failure:
+            if ctx.is_failure or ctx.is_skipped:
                 return ctx
 
             return f(ctx, *args, **kwargs)
@@ -21,16 +21,16 @@ def action():
 def verify_context(func):
     """
     Guards the execution of the action, if the provided context
-    is in a failure state, execution is stopped
+    is in a failure state or skipped, execution is stopped.
     """
 
     def wrapper(*args, **kwargs):
         (cls, ctx) = args
 
-        if ctx.is_success:
-            return func(*args, **kwargs)
+        if ctx.is_failure or ctx.is_skipped:
+            return ctx
 
-        return ctx
+        return func(*args, **kwargs)
 
     return wrapper
 
