@@ -6,13 +6,17 @@ run: ## Run the app
 	poetry run my-script
 .PHONY: run
 
-lint: ## Lint the code
+lint: ## Lints the code
 	poetry run flake8 pyservice spec
 	poetry run mypy pyservice spec
+	poetry run black . --check
 
 spec: ## Run the specs
 	poetry run mamba spec --format=documentation --enable-coverage
 .PHONY: spec
+
+fmt: ## Formats the code
+	poetry run black .
 
 coverage: ## Run the coverage report
 	poetry run coverage report --fail-under=95

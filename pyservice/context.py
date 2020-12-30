@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 class Context(dict):
@@ -6,20 +6,39 @@ class Context(dict):
 
     def __init__(self, *arg, **kw):
         self.__success = True
+        self.__skipped = False
+        self.__message = None
 
     @property
-    def is_failure(self: 'Context') -> bool:
+    def is_failure(self: "Context") -> bool:
         return self.__success is False
 
     @property
-    def is_success(self: 'Context') -> bool:
+    def is_success(self: "Context") -> bool:
         return self.__success
 
-    def fail(self: 'Context') -> None:
+    @property
+    def is_skipped(self: "Context") -> bool:
+        return self.__skipped
+
+    @property
+    def message(self: "Context") -> Optional[str]:
+        return self.__message
+
+    def fail(self: "Context", msg: Optional[str] = None) -> None:
+        if msg is not None:
+            self.__message = msg
+
         self.__success = False
 
+    def skip(self: "Context", msg: Optional[str] = None) -> None:
+        if msg is not None:
+            self.__message = msg
+
+        self.__skipped = True
+
     @staticmethod
-    def make(dict_value: Dict[str, Any] = {}) -> 'Context':
+    def make(dict_value: Dict[str, Any] = {}) -> "Context":
         ctx = Context()
         ctx.update(dict_value)
         return ctx

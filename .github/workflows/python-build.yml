@@ -33,4 +33,5 @@ jobs:
         make lint
     - name: Run specs
       run: |
+        make lint
         make spec coverage
