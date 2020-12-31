@@ -8,10 +8,6 @@ class ExpectedKeyNotFoundError(Exception):
     pass
 
 
-class UnexpectedKeyFoundError(Exception):
-    pass
-
-
 class PromisedKeyNotFoundError(Exception):
     pass
 
@@ -23,13 +19,9 @@ def _verify_expected_keys(expected_keys: List[str], ctx_keys: List[str]) -> None
     set_expected_keys = set(expected_keys)
     set_ctx_keys = set(ctx_keys)
     expected_diff = set_expected_keys - set_ctx_keys
-    unexpected_diff = set_ctx_keys - set_expected_keys
 
     if expected_diff:
         raise ExpectedKeyNotFoundError(f"Missing keys: {list(expected_diff)}")
-
-    if unexpected_diff:
-        raise UnexpectedKeyFoundError(f"Unexpected keys: {list(unexpected_diff)}")
 
 
 def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None:

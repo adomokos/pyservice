@@ -4,7 +4,6 @@ from pyservice import (
     Context,
     ExpectedKeyNotFoundError,
     PromisedKeyNotFoundError,
-    UnexpectedKeyFoundError,
 )
 
 
@@ -80,18 +79,6 @@ class TestActionExpects:
             action_dummy(ctx)
 
         assert exception.value.args[0] == "Missing keys: ['y']"
-
-    def test_reports_unexpected_key(self, ctx: Context) -> None:
-        @action(expects=["n"])
-        def action_dummy(ctx: Context) -> Context:
-            pass
-
-        ctx["n"] = 3
-        ctx["y"] = 4
-        with pytest.raises(UnexpectedKeyFoundError) as exception:
-            action_dummy(ctx)
-
-        assert exception.value.args[0] == "Unexpected keys: ['y']"
 
 
 class TestActionPromises:
