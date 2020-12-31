@@ -3,6 +3,11 @@ from pyservice import action, Action  # , Action
 from pyservice import Context
 
 
+@pytest.fixture
+def ctx() -> Context:
+    return Context.make()
+
+
 @action()
 def addTwo(ctx: Context) -> Context:
     n = ctx["n"]
@@ -22,11 +27,6 @@ class AddTwo(Action):
         n = ctx["n"]
         ctx["result"] = n + 2
         return ctx
-
-
-@pytest.fixture
-def ctx() -> Context:
-    return Context.make()
 
 
 def test_fn__can_operate_on_context(ctx: Context) -> None:
