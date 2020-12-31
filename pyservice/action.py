@@ -1,13 +1,39 @@
 from abc import abstractmethod
 from functools import wraps
 from pyservice.context import Context
-from typing import Callable
+from typing import Callable, List
 
 
-def action():
+class ExpectedKeyNotFoundError(Exception):
+    pass
+
+
+class UnexpectedKeyFoundError(Exception):
+    pass
+
+
+def _verify_expected_keys(expected_keys: List[str], ctx_keys: List[str]) -> None:
+    if not expected_keys:
+        return
+
+    set_expected_keys = set(expected_keys)
+    set_ctx_keys = set(ctx_keys)
+    expected_diff = set_expected_keys - set_ctx_keys
+    unexpected_diff = set_ctx_keys - set_expected_keys
+
+    if expected_diff:
+        raise ExpectedKeyNotFoundError(f"Missing keys: {list(expected_diff)}")
+
+    if unexpected_diff:
+        raise UnexpectedKeyFoundError(f"Unexpected keys: {list(unexpected_diff)}")
+
+
+def action(expects: List[str] = []) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
+            _verify_expected_keys(expects, list(ctx.keys()))
+
             if ctx.is_failure or ctx.is_skipped:
                 return ctx
 
