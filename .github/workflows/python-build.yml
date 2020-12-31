@@ -31,7 +31,6 @@ jobs:
     - name: Run linters (flake8 and mypy)
       run: |
         make lint
-    - name: Run specs
+    - name: Run tests
       run: |
-        make lint
-        make spec coverage
+        make lint coverage
