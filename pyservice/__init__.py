@@ -5,6 +5,7 @@ from .action import (  # noqa: F401,E501
     action,
     Action,
     ExpectedKeyNotFoundError,
+    PromisedKeyNotFoundError,
     UnexpectedKeyFoundError,
 )
 from .context import Context  # noqa: F401,E501

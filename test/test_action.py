@@ -1,6 +1,11 @@
 import pytest
 from pyservice import action, Action  # , Action
-from pyservice import Context, ExpectedKeyNotFoundError, UnexpectedKeyFoundError
+from pyservice import (
+    Context,
+    ExpectedKeyNotFoundError,
+    PromisedKeyNotFoundError,
+    UnexpectedKeyFoundError,
+)
 
 
 @pytest.fixture
@@ -87,6 +92,30 @@ class TestActionExpects:
             action_dummy(ctx)
 
         assert exception.value.args[0] == "Unexpected keys: ['y']"
+
+
+class TestActionPromises:
+    def test_promises_keys_all_found(self, ctx: Context) -> None:
+        @action(expects=["n"], promises=["y"])
+        def action_dummy(ctx: Context) -> Context:
+            ctx["y"] = 4
+            return ctx
+
+        ctx["n"] = 3
+        action_dummy(ctx)
+
+        assert ctx.is_success
+
+    def test_promises_keys_not_found(self, ctx: Context) -> None:
+        @action(expects=["n"], promises=["y"])
+        def action_dummy(ctx: Context) -> Context:
+            pass
+
+        ctx["n"] = 3
+        with pytest.raises(PromisedKeyNotFoundError) as exception:
+            action_dummy(ctx)
+
+        assert exception.value.args[0] == "Promised keys not found: ['y']"
 
 
 def test_class__can_use_instance_method(ctx: Context) -> None:

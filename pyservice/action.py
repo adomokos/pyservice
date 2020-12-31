@@ -12,6 +12,10 @@ class UnexpectedKeyFoundError(Exception):
     pass
 
 
+class PromisedKeyNotFoundError(Exception):
+    pass
+
+
 def _verify_expected_keys(expected_keys: List[str], ctx_keys: List[str]) -> None:
     if not expected_keys:
         return
@@ -28,7 +32,19 @@ def _verify_expected_keys(expected_keys: List[str], ctx_keys: List[str]) -> None
         raise UnexpectedKeyFoundError(f"Unexpected keys: {list(unexpected_diff)}")
 
 
-def action(expects: List[str] = []) -> Callable:
+def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None:
+    if not promised_keys:
+        return
+
+    promised_diff = set(promised_keys) - set(ctx_keys)
+
+    if promised_diff:
+        raise PromisedKeyNotFoundError(
+            f"Promised keys not found: {list(promised_diff)}"
+        )
+
+
+def action(expects: List[str] = [], promises: List[str] = []) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
@@ -37,7 +53,11 @@ def action(expects: List[str] = []) -> Callable:
             if ctx.is_failure or ctx.is_skipped:
                 return ctx
 
-            return f(ctx, *args, **kwargs)
+            result = f(ctx, *args, **kwargs)
+
+            _verify_promised_keys(promises, list(ctx.keys()))
+
+            return result
 
         return decorated
 
