@@ -4,4 +4,4 @@ from mamba import description, it
 
 with description("Version") as self:
     with it("verifies the package version"):
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.0.2"
