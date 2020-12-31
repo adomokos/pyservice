@@ -7,13 +7,9 @@ run: ## Run the app
 .PHONY: run
 
 lint: ## Lints the code
-	poetry run flake8 pyservice spec test
-	poetry run mypy pyservice spec test
+	poetry run flake8 pyservice test
+	poetry run mypy pyservice test
 	poetry run black . --check
-
-spec: ## Run the specs
-	poetry run mamba spec --format=documentation --enable-coverage
-.PHONY: spec
 
 test: ## Run the tests
 	poetry run pytest
@@ -23,7 +19,7 @@ fmt: ## Formats the code
 	poetry run black .
 
 coverage: ## Run the coverage report
-	poetry run coverage report --fail-under=95
+	poetry run pytest --cov-report term --cov=pyservice test/
 .PHONY: coverage
 
 repl: ## Fire up the Repl
