@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from functools import wraps
 from pyservice.context import Context
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 
 class ExpectedKeyNotFoundError(Exception):
@@ -36,7 +36,10 @@ def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None
         )
 
 
-def action(expects: List[str] = [], promises: List[str] = []) -> Callable:
+def action(
+        expects: List[str] = [],
+        promises: List[str] = [],
+        rollback: Optional[Callable] = None) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
