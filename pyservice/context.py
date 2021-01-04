@@ -10,28 +10,28 @@ class Context(dict):
         self.__message = None
 
     @property
-    def is_failure(self: "Context") -> bool:
+    def is_failure(self) -> bool:
         return self.__success is False
 
     @property
-    def is_success(self: "Context") -> bool:
+    def is_success(self) -> bool:
         return self.__success
 
     @property
-    def is_skipped(self: "Context") -> bool:
+    def is_skipped(self) -> bool:
         return self.__skipped
 
     @property
-    def message(self: "Context") -> Optional[str]:
+    def message(self) -> Optional[str]:
         return self.__message
 
-    def fail(self: "Context", msg: Optional[str] = None) -> None:
+    def fail(self, msg: Optional[str] = None) -> None:
         if msg is not None:
             self.__message = msg
 
         self.__success = False
 
-    def skip(self: "Context", msg: Optional[str] = None) -> None:
+    def skip(self, msg: Optional[str] = None) -> None:
         if msg is not None:
             self.__message = msg
 
