@@ -1,6 +1,10 @@
 import pytest
 from pyservice import action, Action  # , Action
-from pyservice import Context
+from pyservice import (
+    Context,
+    ExpectedKeyNotFoundError,
+    PromisedKeyNotFoundError,
+)
 
 
 @pytest.fixture
@@ -15,7 +19,7 @@ def addTwo(ctx: Context) -> Context:
     return ctx
 
 
-@action()
+@action(expects=["n"])
 def addThree(ctx: Context) -> Context:
     n = ctx["n"]
     ctx["result"] = n + 3
@@ -50,6 +54,55 @@ def test_fn__will_not_execute_if_in_failed_state(ctx: Context) -> None:
     addTwo(ctx)
 
     assert "result" not in ctx.keys()
+
+
+class TestActionExpects:
+    def test_expects_keys_all_found(self, ctx: Context) -> None:
+        @action(expects=["n", "y"])
+        def action_dummy(ctx: Context) -> Context:
+            pass
+
+        ctx["n"] = 3
+        ctx["y"] = 4
+        action_dummy(ctx)
+
+        assert ctx.is_success
+
+    def test_expects_keys_misses_one(self, ctx: Context) -> None:
+        @action(expects=["n", "y"])
+        def action_dummy(ctx: Context) -> Context:
+            pass
+
+        ctx["n"] = 3
+
+        with pytest.raises(ExpectedKeyNotFoundError) as exception:
+            action_dummy(ctx)
+
+        assert exception.value.args[0] == "Missing keys: ['y']"
+
+
+class TestActionPromises:
+    def test_promises_keys_all_found(self, ctx: Context) -> None:
+        @action(expects=["n"], promises=["y"])
+        def action_dummy(ctx: Context) -> Context:
+            ctx["y"] = 4
+            return ctx
+
+        ctx["n"] = 3
+        action_dummy(ctx)
+
+        assert ctx.is_success
+
+    def test_promises_keys_not_found(self, ctx: Context) -> None:
+        @action(expects=["n"], promises=["y"])
+        def action_dummy(ctx: Context) -> Context:
+            pass
+
+        ctx["n"] = 3
+        with pytest.raises(PromisedKeyNotFoundError) as exception:
+            action_dummy(ctx)
+
+        assert exception.value.args[0] == "Promised keys not found: ['y']"
 
 
 def test_class__can_use_instance_method(ctx: Context) -> None:
