@@ -45,7 +45,7 @@ def action(
 ) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
-        def decorated(ctx: Context, *args, **kwargs) -> Context:
+        def decorated(ctx: Context) -> Context:
             _verify_expected_keys(expects, list(ctx.keys()))
 
             if ctx.is_skipped:
@@ -57,7 +57,7 @@ def action(
                 else:
                     return ctx
 
-            result = f(ctx, *args, **kwargs)
+            result = f(ctx)
 
             _verify_promised_keys(promises, list(ctx.keys()))
 

@@ -26,11 +26,13 @@ class Organizer:
 
             return ctx if result is None else result
 
-    def _execute_rollback(self, ctx: Context, action: Action):
+    @staticmethod
+    def _execute_rollback(ctx: Context, action: Action):
         return action(ctx)
 
+    @staticmethod
     def _find_actions_to_roll_back(
-        self, action: Action, actions: List[Action]
+        action: Action, actions: List[Action]
     ) -> List[Action]:
 
         actions_to_roll_back = [
