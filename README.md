@@ -1,6 +1,6 @@
 # PyService
 
-![build](https://github.com/adomokos/pyservice/workflows/Python%20Build/badge.svg)
+![build](https://github.com/adomokos/pyservice/workflows/Python%20Build/badge.svg) [![PyPI version](https://badge.fury.io/py/pyservice.svg)](https://badge.fury.io/py/pyservice)
 
 A [light-service](https://github.com/adomokos/light-service) influenced project in Python.
 
