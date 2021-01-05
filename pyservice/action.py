@@ -1,7 +1,9 @@
-from abc import abstractmethod
 from functools import wraps
 from pyservice.context import Context
-from typing import Callable, List
+from typing import Callable, List, Optional
+
+# Type declaration for Action
+Action = Callable[[Context], Context]
 
 
 class ExpectedKeyNotFoundError(Exception):
@@ -36,14 +38,24 @@ def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None
         )
 
 
-def action(expects: List[str] = [], promises: List[str] = []) -> Callable:
+def action(
+    expects: List[str] = [],
+    promises: List[str] = [],
+    rollback: Optional[Action] = None,
+) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
             _verify_expected_keys(expects, list(ctx.keys()))
 
-            if ctx.is_failure or ctx.is_skipped:
+            if ctx.is_skipped:
                 return ctx
+
+            if ctx.is_failure:
+                if rollback:
+                    return rollback(ctx)
+                else:
+                    return ctx
 
             result = f(ctx, *args, **kwargs)
 
@@ -71,18 +83,3 @@ def verify_context(func):
         return func(*args, **kwargs)
 
     return wrapper
-
-
-class ActionMeta(type):
-    def __init__(cls, name, bases, attrs, **kwargs):
-        super().__init__(name, bases, attrs)
-        cls.execute = verify_context(cls.execute)
-
-
-class Action(metaclass=ActionMeta):
-    @abstractmethod
-    def execute(self, ctx: Context) -> Context:
-        pass
-
-    def rollback(self, ctx: Context) -> Context:
-        pass
