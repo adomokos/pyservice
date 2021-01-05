@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyservice"
-version = "0.0.3"
+version = "0.0.4"
 description = "A light-service like project in Python"
 authors = ["Attila Domokos <adomokos@gmail.com>"]
 
