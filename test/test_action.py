@@ -1,5 +1,5 @@
 import pytest
-from pyservice import action, Action  # , Action
+from pyservice import action  # , Action
 from pyservice import (
     Context,
     ExpectedKeyNotFoundError,
@@ -11,13 +11,6 @@ from .test_doubles import add_two
 @pytest.fixture
 def ctx() -> Context:
     return Context.make()
-
-
-class AddTwo(Action):
-    def execute(self, ctx):
-        n = ctx["n"]
-        ctx["result"] = n + 2
-        return ctx
 
 
 def test_fn__can_operate_on_context(ctx: Context) -> None:
@@ -83,18 +76,3 @@ class TestActionPromises:
             action_dummy(ctx)
 
         assert exception.value.args[0] == "Promised keys not found: ['y']"
-
-
-def test_class__can_use_instance_method(ctx: Context) -> None:
-    ctx["n"] = 2
-    a2 = AddTwo()
-    a2.execute(ctx)
-    assert ctx["result"] == 4
-
-
-def test_class__execution_guarded_by_state_of_ctx(ctx: Context) -> None:
-    ctx["n"] = 2
-    ctx.fail()
-    AddTwo().execute(ctx)
-
-    assert "result" not in ctx.keys()

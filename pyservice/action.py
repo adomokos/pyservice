@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from functools import wraps
 from pyservice.context import Context
 from typing import Callable, List, Optional
@@ -81,18 +80,3 @@ def verify_context(func):
         return func(*args, **kwargs)
 
     return wrapper
-
-
-class ActionMeta(type):
-    def __init__(cls, name, bases, attrs, **kwargs):
-        super().__init__(name, bases, attrs)
-        cls.execute = verify_context(cls.execute)
-
-
-class Action(metaclass=ActionMeta):
-    @abstractmethod
-    def execute(self, ctx: Context) -> Context:
-        pass
-
-    def rollback(self, ctx: Context) -> Context:
-        pass
