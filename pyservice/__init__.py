@@ -8,4 +8,4 @@ from .action import (  # noqa: F401,E501
     PromisedKeyNotFoundError,
 )
 from .context import Context  # noqa: F401,E501
-from .organizer import Organizer2, Organizer  # noqa: F401,E501
+from .organizer import Organizer2  # noqa: F401,E501

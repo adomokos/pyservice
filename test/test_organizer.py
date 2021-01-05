@@ -1,5 +1,5 @@
 import pytest
-from pyservice import Context, Organizer, Organizer2
+from pyservice import Context, Organizer2
 from .test_doubles import (
     add_two,
     add_two_with_rollback,
@@ -8,10 +8,6 @@ from .test_doubles import (
     organizer,
     fail_context,
     skip_rest,
-    AddTwo,
-    AddTwoWithRollback,
-    AddThree,
-    Fail,
 )
 
 
@@ -97,32 +93,3 @@ def test_rolls_back_action_when_rollback_found(ctx: Context) -> None:
 
     assert result_ctx.is_failure
     assert result_ctx["result"] == 3
-
-
-# Using Action objects
-def test_can_call_two_actions(ctx: Context) -> None:
-    ctx["result"] = 2
-    o2 = Organizer(ctx, [AddTwo(), AddThree()])
-
-    o2.run()
-
-    assert ctx["result"] == 7
-
-
-def test_will_stop_executing_after_failed_action(ctx: Context) -> None:
-    ctx["result"] = 2
-    o3 = Organizer(ctx, [AddTwo(), Fail(), AddThree()])
-
-    result3: Context = o3.run()
-
-    assert result3.is_failure
-    assert result3["result"] == 4
-
-
-def test_rolls_back_with_available_rollbacks(ctx: Context) -> None:
-    ctx["result"] = 2
-    o4 = Organizer(ctx, [AddTwoWithRollback(), Fail(), AddThree()])
-
-    result4: Context = o4.run()
-    assert result4.is_failure
-    assert result4["result"] == 2

@@ -1,5 +1,4 @@
 from pyservice import action
-from pyservice import Action
 from pyservice import Context
 from pyservice import Organizer2
 
@@ -63,40 +62,3 @@ def skip_rest(ctx: Context) -> Context:
 
 
 organizer = Organizer2([add_two, add_three])
-
-
-def organizer2(ctx: Context) -> Context:
-    ctx["result"] = 2
-    actions = [AddTwo, AddThree]
-    for an_action in actions:
-        an_action().execute(ctx)
-
-    return ctx
-
-
-class AddTwo(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx["result"] += 2
-        return ctx
-
-
-class AddTwoWithRollback(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx["result"] += 2
-        return ctx
-
-    def rollback(self, ctx: Context) -> Context:
-        ctx["result"] -= 2
-        return ctx
-
-
-class AddThree(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx["result"] += 3
-        return ctx
-
-
-class Fail(Action):
-    def execute(self, ctx: Context) -> Context:
-        ctx.fail()
-        return ctx
