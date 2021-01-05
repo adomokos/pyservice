@@ -2,7 +2,9 @@ import pytest
 from pyservice import Context, Organizer, Organizer2
 from .test_doubles import (
     add_two,
+    add_two_with_rollback,
     add_three,
+    add_three_with_rollback,
     organizer,
     fail_context,
     skip_rest,
@@ -21,7 +23,7 @@ def ctx() -> Context:
 # Using functions
 def test_can_operate_on_action_functions(ctx: Context) -> None:
     ctx["n"] = 3
-    organizer(ctx)
+    organizer.run(ctx)
 
     assert ctx["result"] == 8
 
@@ -81,6 +83,20 @@ def test_can_fail_nested_organizers_action(ctx: Context) -> None:
     assert result_ctx.is_failure
     # Stops at the 3rd action: adds 2, 3 and 2 to initial 3 => 10
     assert result_ctx["result"] == 10
+
+
+def test_rolls_back_action_when_rollback_found(ctx: Context) -> None:
+    ctx["n"] = 3
+
+    rollback_organizer = Organizer2(
+        [add_two_with_rollback, add_three_with_rollback, fail_context]
+    )
+
+    # Run function under test
+    result_ctx = rollback_organizer.run(ctx)
+
+    assert result_ctx.is_failure
+    assert result_ctx["result"] == 3
 
 
 # Using Action objects

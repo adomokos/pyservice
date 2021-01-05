@@ -1,8 +1,26 @@
-from typing import Callable, List
-
 from pyservice import action
 from pyservice import Action
 from pyservice import Context
+from pyservice import Organizer2
+
+
+def add_two_rollback(ctx: Context) -> Context:
+    n = ctx["n"]
+
+    result = ctx.get("result", n)
+
+    ctx.update(result=result - 2)
+    return ctx
+
+
+@action(expects=["n"], rollback=add_two_rollback)
+def add_two_with_rollback(ctx: Context) -> Context:
+    n = ctx["n"]
+
+    result = ctx.get("result", n)
+
+    ctx.update(result=result + 2)
+    return ctx
 
 
 @action(expects=["n"])
@@ -15,6 +33,17 @@ def add_two(ctx: Context) -> Context:
     return ctx
 
 
+def add_three_rollback(ctx: Context) -> Context:
+    ctx["result"] -= 3
+    return ctx
+
+
+@action(promises=["result"], rollback=add_three_rollback)
+def add_three_with_rollback(ctx: Context) -> Context:
+    ctx["result"] += 3
+    return ctx
+
+
 @action(promises=["result"])
 def add_three(ctx: Context) -> Context:
     ctx["result"] += 3
@@ -24,7 +53,7 @@ def add_three(ctx: Context) -> Context:
 @action()
 def fail_context(ctx: Context) -> Context:
     ctx.fail("Something went wrong...")
-    return ctx
+    raise Organizer2.ContextFailed(fail_context)
 
 
 @action()
@@ -33,12 +62,7 @@ def skip_rest(ctx: Context) -> Context:
     return ctx
 
 
-def organizer(ctx: Context) -> Context:
-    actions: List[Callable] = [add_two, add_three]
-    for an_action in actions:
-        an_action(ctx)
-
-    return ctx
+organizer = Organizer2([add_two, add_three])
 
 
 def organizer2(ctx: Context) -> Context:

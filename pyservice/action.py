@@ -37,16 +37,23 @@ def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None
 
 
 def action(
-        expects: List[str] = [],
-        promises: List[str] = [],
-        rollback: Optional[Callable] = None) -> Callable:
+    expects: List[str] = [],
+    promises: List[str] = [],
+    rollback: Optional[Callable[[Context], Context]] = None,
+) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)
         def decorated(ctx: Context, *args, **kwargs):
             _verify_expected_keys(expects, list(ctx.keys()))
 
-            if ctx.is_failure or ctx.is_skipped:
+            if ctx.is_skipped:
                 return ctx
+
+            if ctx.is_failure:
+                if rollback:
+                    return rollback(ctx)
+                else:
+                    return ctx
 
             result = f(ctx, *args, **kwargs)
 
