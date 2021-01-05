@@ -2,6 +2,7 @@ from functools import wraps
 from pyservice.context import Context
 from typing import Callable, List, Optional
 
+# Type declaration for Action
 Action = Callable[[Context], Context]
 
 

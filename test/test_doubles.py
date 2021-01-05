@@ -1,6 +1,6 @@
 from pyservice import action
 from pyservice import Context
-from pyservice import Organizer2
+from pyservice import Organizer
 
 
 def add_two_rollback(ctx: Context) -> Context:
@@ -52,7 +52,7 @@ def add_three(ctx: Context) -> Context:
 @action()
 def fail_context(ctx: Context) -> Context:
     ctx.fail("Something went wrong...")
-    raise Organizer2.ContextFailed(fail_context)
+    raise Organizer.ContextFailed(fail_context)
 
 
 @action()
@@ -61,4 +61,4 @@ def skip_rest(ctx: Context) -> Context:
     return ctx
 
 
-organizer = Organizer2([add_two, add_three])
+organizer = Organizer([add_two, add_three])
