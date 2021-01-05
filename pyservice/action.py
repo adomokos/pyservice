@@ -2,6 +2,8 @@ from functools import wraps
 from pyservice.context import Context
 from typing import Callable, List, Optional
 
+Action = Callable[[Context], Context]
+
 
 class ExpectedKeyNotFoundError(Exception):
     pass
@@ -38,7 +40,7 @@ def _verify_promised_keys(promised_keys: List[str], ctx_keys: List[str]) -> None
 def action(
     expects: List[str] = [],
     promises: List[str] = [],
-    rollback: Optional[Callable[[Context], Context]] = None,
+    rollback: Optional[Action] = None,
 ) -> Callable:
     def action_wrapper(f: Callable):
         @wraps(f)

@@ -1,17 +1,16 @@
 import functools
+from pyservice.action import Action
 from pyservice.context import Context
 from itertools import takewhile
 from typing import Callable, List
 
-Action2 = Callable[[Context], Context]
-
 
 class Organizer2:
     class ContextFailed(Exception):
-        def __init__(self, action: Action2):
+        def __init__(self, action: Action):
             self.action = action
 
-    def __init__(self, actions: List[Action2]):
+    def __init__(self, actions: List[Action]):
         self.actions = actions
 
     def run(self, ctx: Context) -> Context:
@@ -27,11 +26,11 @@ class Organizer2:
 
             return ctx if result is None else result
 
-    def _execute_rollback(self, ctx: Context, action: Action2):
+    def _execute_rollback(self, ctx: Context, action: Action):
         return action(ctx)
 
     def _find_actions_to_roll_back(
-        self, action: Action2, actions: List[Action2]
+        self, action: Action, actions: List[Action]
     ) -> List[Callable]:
 
         actions_to_roll_back = [
