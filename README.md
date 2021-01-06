@@ -101,3 +101,32 @@ def add_three(ctx: Context) -> Context:
 The `action` will verify - before it's invoked - that the expected keys are in the `Context` hash. If there are any missing, `ExpectedKeyNotFoundError` will be thrown and all of the missing keys will be listed in the exception message. Similarly, `PromisedKeyNotFoundError` is raised when the action fails to provide a value with the defined promised keys.
 
 You can find the relevant examples [here](test/test_example_2.py).
+
+## Rollback
+
+One of your actions might fail while they have logic that permanently changes state in a data store or in an API resource. A trivial example is charging your customer while you can't complete the order. When that happens, you can leverage `pyservice`'s  `rollback` functionality like this:
+
+```python
+def add_two_rollback(ctx: Context) -> Context:
+    ctx["result"] -= 2
+    return ctx
+
+
+@action(expects=["n"], promises=["result"], rollback=add_two_rollback)
+def add_two(ctx: Context) -> Context:
+    number = ctx.get("n", 0)
+
+    ctx["result"] = number + 2
+
+    return ctx
+
+
+@action()
+def fail_context(ctx: Context) -> Context:
+    ctx.fail("I don't like what I see here")
+    raise Organizer.ContextFailed(fail_context)
+```
+
+The action accepts a function reference for rollback which is executed when an `Organizer.ContextFailed` exception is raised. The rollback field is optional, nothing happens when you don't provide one.
+
+Take a look at [this](test/test_example_3.py) basic example.
