@@ -45,7 +45,7 @@ def test_can_run_functions():
     assert result_ctx["result"] == 9
 ```
 
-The `Context` is an extended dictionary, it stores failure and success state in it besides its key-value pairs. This is the "state" that is carried between the actions by the [Organizer](pyservice/organizer.py). All Organizers expose a `run` function which is responsible for executing the provided actions in order.
+The `Context` is an extended dictionary, it stores failure and success states in it besides its key-value pairs. This is the "state" that is carried between the actions by the [Organizer](pyservice/organizer.py). All Organizers expose a `run` function that is responsible for executing the provided actions in order.
 
 This is the happy path, but what happens when there is a failure between the two functions? I add a `fail_context` function that will fail the context with a message:
 

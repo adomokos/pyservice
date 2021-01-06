@@ -21,12 +21,7 @@ def fail_context(ctx: Context) -> Context:
     raise Organizer.ContextFailed(fail_context)
 
 
-def add_three_rollback(ctx: Context) -> Context:
-    ctx["result"] -= 3
-    return ctx
-
-
-@action(expects=["result"], rollback=add_three_rollback)
+@action(expects=["result"])
 def add_three(ctx: Context) -> Context:
     result = ctx["result"]
 
@@ -41,4 +36,4 @@ def test_can_run_functions():
     result_ctx = organizer.run(ctx)
 
     assert ctx.is_failure
-    assert result_ctx["result"] == 4
+    assert result_ctx["result"] == 7
