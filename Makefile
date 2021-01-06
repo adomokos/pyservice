@@ -20,6 +20,7 @@ fmt: ## Formats the code
 
 coverage: ## Run the coverage report
 	poetry run pytest --cov-report term --cov=pyservice test/
+	poetry run coverage-badge -o coverage.svg -f
 .PHONY: coverage
 
 repl: ## Fire up the Repl
