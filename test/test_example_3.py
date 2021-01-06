@@ -30,7 +30,7 @@ def add_three(ctx: Context) -> Context:
     return ctx
 
 
-def test_can_run_functions():
+def test_can_roll_back_function():
     ctx = Context.make({"n": 4})
     organizer = Organizer([add_two, add_three, fail_context])
     result_ctx = organizer.run(ctx)
