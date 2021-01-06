@@ -79,4 +79,25 @@ But there is more to it!
 
 You can define contracts for the actions with the `expects` and `promises` list of keys like this:
 
+```python
+@action(expects=["n"], promises=["result"])
+def add_two(ctx: Context) -> Context:
+    number = ctx.get("n", 0)
 
+    ctx["result"] = number + 2
+
+    return ctx
+
+
+@action(expects=["result"])
+def add_three(ctx: Context) -> Context:
+    result = ctx["result"]
+
+    ctx["result"] = result + 3
+
+    return ctx
+```
+
+The `action` will verify - before it's invoked - that the expected keys are in the `Context` hash. If there are any missing, `ExpectedKeyNotFoundError` will be thrown and all of the missing keys will be listed in the exception message. Similarly, `PromisedKeyNotFoundError` is raised when the action fails to provide a value with the defined promised keys.
+
+You can find the relevant examples [here](test/test_example_2.py).
