@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyservice",  # Replace with your own username
-    version="0.0.6",
+    version="0.0.7",
     author="Attila Domokos",
     author_email="adomokos@gmail.com",
     description="Series of Actions with an emphasis on simplicity.",
