@@ -3,6 +3,11 @@ name = "pyservice"
 version = "0.0.5"
 description = "A light-service like project in Python"
 authors = ["Attila Domokos <adomokos@gmail.com>"]
+homepage = "https://github.com/adomokos/pyservice"
+repository = "https://github.com/adomokos/pyservice"
+keywords = ["workflow", "functional" "pyservice"]
+readme = "README.md"
+documentation = "https://github.com/adomokos/pyservice"
 
 [tool.poetry.dependencies]
 python = "^3.6"
