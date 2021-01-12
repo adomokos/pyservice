@@ -2,7 +2,7 @@
 
 ![build](https://github.com/adomokos/pyservice/workflows/Python%20Build/badge.svg)
 [![PyPI version](https://badge.fury.io/py/pyservice.svg)](https://badge.fury.io/py/pyservice)
-[![Coverage](coverage.svg)](coverage.svg)
+[![Coverage](coverage.svg)](https://github.com/adomokos/pyservice/coverage.svg)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
 A [light-service](https://github.com/adomokos/light-service) influenced project in Python.
@@ -13,7 +13,7 @@ Are you tired of 500 lines long Python code with conditionals, iterators, and fu
 
 All complex logic can be decomposed into small functions, invoked sequentially. The functions should protect themselves from execution if a previous failure occurs, a more elegant solution exists: [Railway-Oriented Programming](https://fsharpforfunandprofit.com/rop/).
 
-Let's see how that looks with `pyservice`. There are two functions, one that adds 2 to the initial number, and one that adds 3. The data is carried over between the functions in an extended dictionary we call [Context](pyservice/context.py), just like how a conveyor belt would be used in an assembly line:
+Let's see how that looks with `pyservice`. There are two functions, one that adds 2 to the initial number, and one that adds 3. The data is carried over between the functions in an extended dictionary we call [Context](https://github.com/adomokos/pyservice/blob/master/pyservice/context.py), just like how a conveyor belt would be used in an assembly line:
 
 ```python
 from pyservice import action, Context, Organizer
@@ -46,7 +46,7 @@ def test_can_run_functions():
     assert result_ctx["result"] == 9
 ```
 
-The `Context` is an extended dictionary, it stores failure and success states in it besides its key-value pairs. This is the "state" that is carried between the actions by the [Organizer](pyservice/organizer.py). All Organizers expose a `run` function that is responsible for executing the provided actions in order.
+The `Context` is an extended dictionary, it stores failure and success states in it besides its key-value pairs. This is the "state" that is carried between the actions by the [Organizer](https://github.com/adomokos/pyservice/blob/master/pyservice/organizer.py). All Organizers expose a `run` function that is responsible for executing the provided actions in order.
 
 This is the happy path, but what happens when there is a failure between the two functions? I add a `fail_context` function that will fail the context with a message:
 
@@ -71,7 +71,7 @@ def test_can_run_functions_with_failure():
 
 Look at the actions, no conditional logic was added to them, the function wrapper protects the action from execution once it's in a failure state.
 
-You can find these examples [here](test/test_example_1.py).
+You can find these examples [here](https://github.com/adomokos/pyservice/blob/master/test/test_example_1.py).
 
 But there is more to it!
 
@@ -101,7 +101,7 @@ def add_three(ctx: Context) -> Context:
 
 The `action` will verify - before it's invoked - that the expected keys are in the `Context` hash. If there are any missing, `ExpectedKeyNotFoundError` will be thrown and all of the missing keys will be listed in the exception message. Similarly, `PromisedKeyNotFoundError` is raised when the action fails to provide a value with the defined promised keys.
 
-You can find the relevant examples [here](test/test_example_2.py).
+You can find the relevant examples [here](https://github.com/adomokos/pyservice/blob/master/test/test_example_2.py).
 
 ## Rollback
 
@@ -130,4 +130,4 @@ def fail_context(ctx: Context) -> Context:
 
 The action accepts a function reference for rollback which is executed when an `Organizer.ContextFailed` exception is raised. The rollback field is optional, nothing happens when you don't provide one.
 
-Take a look at [this](test/test_example_3.py) basic example.
+Take a look at [this](https://github.com/adomokos/pyservice/blob/master/test/test_example_3.py) basic example.
