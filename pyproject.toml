@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "pyservice"
-version = "0.0.5"
+version = "0.0.6"
 description = "A light-service like project in Python"
 authors = ["Attila Domokos <adomokos@gmail.com>"]
 homepage = "https://github.com/adomokos/pyservice"
 repository = "https://github.com/adomokos/pyservice"
-keywords = ["workflow", "functional" "pyservice"]
+keywords = ["workflow", "functional", "pyservice"]
 readme = "README.md"
 documentation = "https://github.com/adomokos/pyservice"
 
