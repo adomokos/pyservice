@@ -71,7 +71,7 @@ def test_can_run_functions_with_failure():
 
 Look at the actions, no conditional logic was added to them, the function wrapper protects the action from execution once it's in a failure state.
 
-You can find these examples [here](https://github.com/adomokos/pyservice/blob/master/test/test_example_1.py).
+You can find these examples [here](https://github.com/adomokos/pyservice/blob/master/test/readme_examples/test_example_1.py).
 
 But there is more to it!
 
@@ -101,7 +101,7 @@ def add_three(ctx: Context) -> Context:
 
 The `action` will verify - before it's invoked - that the expected keys are in the `Context` hash. If there are any missing, `ExpectedKeyNotFoundError` will be thrown and all of the missing keys will be listed in the exception message. Similarly, `PromisedKeyNotFoundError` is raised when the action fails to provide a value with the defined promised keys.
 
-You can find the relevant examples [here](https://github.com/adomokos/pyservice/blob/master/test/test_example_2.py).
+You can find the relevant examples [here](https://github.com/adomokos/pyservice/blob/master/test/readme_examples/test_example_2.py).
 
 ## Rollback
 
@@ -130,4 +130,4 @@ def fail_context(ctx: Context) -> Context:
 
 The action accepts a function reference to roll back its state changes when a `Context` fails. The rollback field is optional, nothing happens when you don't provide one.
 
-Take a look at [this](https://github.com/adomokos/pyservice/blob/master/test/test_example_3.py) basic example.
+Take a look at [this](https://github.com/adomokos/pyservice/blob/master/test/readme_examples/test_example_3.py) basic example.
