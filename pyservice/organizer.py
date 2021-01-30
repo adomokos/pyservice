@@ -13,9 +13,20 @@ class Organizer:
     def __init__(self, actions: List[Action]):
         self.actions = actions
 
+    @staticmethod
+    def _call_action(f: Action, ctx: Context) -> Context:
+        ctx = f(ctx)
+
+        if ctx.is_failure:
+            raise Organizer.ContextFailed(f)
+
+        return ctx
+
     def run(self, ctx: Context) -> Context:
         try:
-            return functools.reduce(lambda _ctx, f: f(_ctx), self.actions, ctx)
+            return functools.reduce(
+                lambda _ctx, f: self._call_action(f, _ctx), self.actions, ctx
+            )
         except Organizer.ContextFailed as e:
             # roll back the actions in reverse order
             actions_to_roll_back = self._find_actions_to_roll_back(

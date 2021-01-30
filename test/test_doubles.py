@@ -52,7 +52,7 @@ def add_three(ctx: Context) -> Context:
 @action()
 def fail_context(ctx: Context) -> Context:
     ctx.fail("Something went wrong...")
-    raise Organizer.ContextFailed(fail_context)
+    return ctx
 
 
 @action()
