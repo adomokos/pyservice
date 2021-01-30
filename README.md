@@ -128,6 +128,6 @@ def fail_context(ctx: Context) -> Context:
     raise Organizer.ContextFailed(fail_context)
 ```
 
-The action accepts a function reference for rollback which is executed when an `Organizer.ContextFailed` exception is raised. The rollback field is optional, nothing happens when you don't provide one.
+The action accepts a function reference to roll back its state changes when a `Context` fails. The rollback field is optional, nothing happens when you don't provide one.
 
 Take a look at [this](https://github.com/adomokos/pyservice/blob/master/test/test_example_3.py) basic example.
