@@ -125,7 +125,6 @@ def add_two(ctx: Context) -> Context:
 @action()
 def fail_context(ctx: Context) -> Context:
     ctx.fail("I don't like what I see here")
-    raise Organizer.ContextFailed(fail_context)
 ```
 
 The action accepts a function reference to roll back its state changes when a `Context` fails. The rollback field is optional, nothing happens when you don't provide one.
